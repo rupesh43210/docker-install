@@ -31,11 +31,11 @@ sudo apt-get install -y \
  
  mkdir ~/wordpress && cd ~/wordpress
  
- docker run -e MYSQL_ROOT_PASSWORD=wpadmin -e MYSQL_DATABASE=wpadmin --name wordpressdb -v "$PWD/database":/var/lib/mysql -d mariadb:latest
+ docker run -e MYSQL_ROOT_PASSWORD=wordpress -e MYSQL_DATABASE=wordpress --name wordpressdb -v "$PWD/database":/var/lib/mysql -d mariadb:latest
  
  docker pull wordpress
  
- docker run -e WORDPRESS_DB_USER=root -e WORDPRESS_DB_PASSWORD=wpadmin --name wordpress --link wordpressdb:mysql -p 880:80 -v "$PWD/html":/var/www/html -d wordpress
+ docker run -e WORDPRESS_DB_USER=root -e WORDPRESS_DB_PASSWORD=wordpress --name wordpress --link wordpressdb:mysql -p 8090:80 -v "$PWD/html":/var/www/html -d wordpress
  
  #cd ../
  
