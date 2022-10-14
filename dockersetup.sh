@@ -23,4 +23,6 @@ sudo apt-get install \
  
  clear 
  
+ sudo apt autoremove -y
+ 
  echo "Docker Install Completed" 
