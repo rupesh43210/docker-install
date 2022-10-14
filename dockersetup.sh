@@ -35,6 +35,9 @@ sudo apt-get install -y \
     -v portainer_data:/data \
     portainer/portainer-ce:latest
     
+ cd ../
+ rm -r docker-install/
+    
  clear
  
  echo "Please visit https://localhost:9443"
