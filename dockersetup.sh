@@ -17,3 +17,10 @@ sudo apt-get install \
   
  sudo apt-get update
  sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+ 
+ cd ../
+ rm -r docker-install/
+ 
+ clear 
+ 
+ echo "Docker Install Completed" 
