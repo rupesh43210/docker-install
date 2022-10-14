@@ -29,8 +29,14 @@ sudo apt-get install -y \
  
  echo "Docker Install Completed" 
  
+ mkdir ~/wordpress && cd ~/wordpress
+ 
+ docker run -e MYSQL_ROOT_PASSWORD=wpadmin -e MYSQL_DATABASE=wpadmin --name wordpressdb -v "$PWD/database":/var/lib/mysql -d mariadb:latest
+ 
  docker pull wordpress
  
- cd ../
+ docker run -e WORDPRESS_DB_USER=root -e WORDPRESS_DB_PASSWORD=wpadmin --name wordpress --link wordpressdb:mysql -p 880:80 -v "$PWD/html":/var/www/html -d wordpress
  
- rm -r docker-install/
+ #cd ../
+ 
+ #rm -r docker-install/
