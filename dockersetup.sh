@@ -30,6 +30,14 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o 
  
  echo "Docker Install Completed" 
  
+ sudo groupadd docker
+ sudo usermod -aG docker $USER
+ newgrp docker
+ 
+ 
+ 
+ 
+ 
  docker volume create portainer_data
  
  docker run -d -p 8000:8000 -p 9443:9443 --name portainer \
