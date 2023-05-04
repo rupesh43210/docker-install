@@ -20,11 +20,11 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose
 # Add current user to the Docker group
 sudo groupadd docker
 sudo usermod -aG docker $USER
-echo "Please log out and log back in to apply group changes."
+newgrp docker
 
 # Create Portainer data volume and start Portainer container
-sudo docker volume create portainer_data
-sudo docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest
+docker volume create portainer_data
+docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest
 
 # Clean up
 sudo apt autoremove -y
