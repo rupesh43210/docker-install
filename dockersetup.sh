@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# Update package lists and install dependencies
-sudo apt update
+# Update package lists
 sudo apt-get update
+
+# Install dependencies
 sudo apt-get install -y ca-certificates curl gnupg lsb-release
 
 # Add Docker GPG key and repository
@@ -13,19 +14,34 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.
 # Remove old versions of Docker
 sudo apt-get remove -y docker docker-engine docker.io containerd runc
 
-# Install Docker and Docker Compose
+# Install Docker Engine and CLI
 sudo apt-get update
-sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 
-# Add current user to the Docker group
-sudo groupadd docker
+# Install Docker Compose (latest release)
+DOCKER_COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d\" -f4)
+sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+# Add current user to the Docker group, if not already added
+if ! getent group docker > /dev/null; then
+    sudo groupadd docker
+fi
 sudo usermod -aG docker $USER
-newgrp docker
 
-# Create Portainer data volume and start Portainer container
-docker volume create portainer_data
-docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest
+# Set up Portainer only if it's not already running
+if [ ! "$(docker ps -q -f name=portainer)" ]; then
+    if [ "$(docker ps -aq -f status=exited -f name=portainer)" ]; then
+        # Cleanup if a previous Portainer container exists and is exited
+        docker rm portainer
+    fi
+    # Run Portainer
+    docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest
+fi
 
 # Clean up
 sudo apt autoremove -y
-echo "Docker Install Completed"
+echo "Docker and Portainer CE Installation Completed"
+
+# Reminder for group change
+echo "Please log out and back in to apply Docker group changes, or start a new shell session."
